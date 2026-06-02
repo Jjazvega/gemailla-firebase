@@ -12,7 +12,11 @@ import {
   where,
   orderBy,
   limit,
+  startAfter,
 } from 'firebase/firestore';
+
+// Default pagination limit to prevent massive data downloads
+const DEFAULT_LIMIT = 50;
 
 const firestoreCollections = {
   Company: 'companies',
@@ -66,13 +70,13 @@ Object.keys(firestoreCollections).forEach((entityName) => {
   const collectionName = firestoreCollections[entityName];
 
   firebase.entities[entityName] = {
-    list: async () => {
-      const q = collection(db, collectionName);
+    list: async (pageLimit = DEFAULT_LIMIT) => {
+      const q = query(collection(db, collectionName), limit(pageLimit));
       const snapshot = await getDocs(q);
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
 
-    filter: async (filters = {}, orderByField = null, limitCount = null) => {
+    filter: async (filters = {}, orderByField = null, limitCount = DEFAULT_LIMIT) => {
       let q = collection(db, collectionName);
       const conditions = [];
 
@@ -90,16 +94,23 @@ Object.keys(firestoreCollections).forEach((entityName) => {
         queryConstraints.push(orderBy(field, direction));
       }
 
-      if (limitCount) {
-        queryConstraints.push(limit(limitCount));
-      }
+      // Apply limit with default of 50 to prevent large data pulls
+      const finalLimit = limitCount || DEFAULT_LIMIT;
+      queryConstraints.push(limit(finalLimit));
 
       if (queryConstraints.length > 0) {
         q = query(q, ...queryConstraints);
       }
 
       const snapshot = await getDocs(q);
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const results = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      
+      // Indicate if there are more results beyond the limit
+      return {
+        data: results,
+        hasMore: results.length === finalLimit,
+        count: results.length,
+      };
     },
 
     get: async (id) => {
