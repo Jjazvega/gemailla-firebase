@@ -1,0 +1,166 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company"
+    },
+    "title": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "Uploaded file URL"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "pdf",
+        "xml",
+        "image"
+      ],
+      "description": "Type of uploaded file"
+    },
+    "doc_type": {
+      "type": "string",
+      "enum": [
+        "factura",
+        "nota_credito",
+        "recibo",
+        "contrato",
+        "estado_cuenta",
+        "declaraci\u00f3n",
+        "n\u00f3mina",
+        "otro"
+      ],
+      "description": "Document classification"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "processing",
+        "analyzed",
+        "error"
+      ],
+      "default": "pending"
+    },
+    "rfc_emisor": {
+      "type": "string"
+    },
+    "rfc_receptor": {
+      "type": "string"
+    },
+    "subtotal": {
+      "type": "number"
+    },
+    "iva": {
+      "type": "number"
+    },
+    "total": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "MXN"
+    },
+    "doc_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unit_price": {
+            "type": "number"
+          },
+          "amount": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "ai_summary": {
+      "type": "string"
+    },
+    "ai_classification": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "number",
+      "default": 1
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "title"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

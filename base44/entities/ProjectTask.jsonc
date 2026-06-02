@@ -1,0 +1,104 @@
+{
+  "name": "ProjectTask",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string"
+    },
+    "company_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "en_curso",
+        "bloqueado",
+        "completado"
+      ],
+      "default": "pendiente"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "baja",
+        "media",
+        "alta"
+      ],
+      "default": "media"
+    },
+    "assignee": {
+      "type": "string"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "estimated_hours": {
+      "type": "number"
+    },
+    "actual_hours": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "project_id",
+    "title"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

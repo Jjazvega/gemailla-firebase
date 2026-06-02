@@ -1,0 +1,147 @@
+{
+  "name": "Payroll",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "employee_id": {
+      "type": "string"
+    },
+    "employee_name": {
+      "type": "string"
+    },
+    "period": {
+      "type": "string",
+      "description": "Ej. 2024-01, 2024-02"
+    },
+    "period_type": {
+      "type": "string",
+      "enum": [
+        "quincenal",
+        "mensual",
+        "semanal"
+      ],
+      "default": "mensual"
+    },
+    "base_salary": {
+      "type": "number"
+    },
+    "bonuses": {
+      "type": "number",
+      "default": 0,
+      "description": "Bonos y comisiones"
+    },
+    "overtime": {
+      "type": "number",
+      "default": 0,
+      "description": "Horas extra"
+    },
+    "deductions_imss": {
+      "type": "number",
+      "default": 0
+    },
+    "deductions_isr": {
+      "type": "number",
+      "default": 0
+    },
+    "other_deductions": {
+      "type": "number",
+      "default": 0
+    },
+    "net_pay": {
+      "type": "number",
+      "description": "Pago neto final"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pendiente",
+        "aprobado",
+        "pagado"
+      ],
+      "default": "pendiente"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "employee_id",
+    "period"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": {
+            "$in": {
+              "_collection": "CompanyMember",
+              "_query": {
+                "data.user_email": "{{user.email}}",
+                "data.role": "director",
+                "data.status": "active"
+              },
+              "_field": "data.company_id"
+            }
+          }
+        },
+        {
+          "data.employee_id": {
+            "$in": {
+              "_collection": "Employee",
+              "_query": {
+                "data.email": "{{user.email}}"
+              },
+              "_field": "id"
+            }
+          }
+        }
+      ]
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "name": "AIConversation",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "query": {
+      "type": "string"
+    },
+    "response": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of the conversation context"
+    },
+    "context_documents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Document IDs used as context"
+    },
+    "filters_used": {
+      "type": "object",
+      "properties": {
+        "doc_type": {
+          "type": "string"
+        },
+        "date_from": {
+          "type": "string"
+        },
+        "date_to": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "company_id",
+    "query"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

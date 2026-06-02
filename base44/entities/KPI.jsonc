@@ -1,0 +1,126 @@
+{
+  "name": "KPI",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "financiero",
+        "operacional",
+        "comercial",
+        "talento",
+        "cliente"
+      ],
+      "default": "financiero"
+    },
+    "target": {
+      "type": "number"
+    },
+    "current": {
+      "type": "number"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "frequency": {
+      "type": "string",
+      "enum": [
+        "diario",
+        "semanal",
+        "mensual",
+        "trimestral",
+        "anual"
+      ],
+      "default": "mensual"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "en_curso",
+        "alcanzado",
+        "en_riesgo",
+        "critico"
+      ],
+      "default": "en_curso"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "name",
+    "target"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "$or": [
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        },
+        {
+          "data.company_id": {
+            "$in": {
+              "_collection": "CompanyMember",
+              "_query": {
+                "data.user_email": "{{user.email}}",
+                "data.role": "director",
+                "data.status": "active"
+              },
+              "_field": "data.company_id"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

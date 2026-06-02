@@ -1,0 +1,159 @@
+{
+  "name": "Transaction",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string",
+      "description": "Reference to Company"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "ingreso",
+        "gasto"
+      ],
+      "description": "Income or expense"
+    },
+    "expense_type": {
+      "type": "string",
+      "enum": [
+        "fijo",
+        "variable"
+      ],
+      "description": "Tipo de gasto"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ventas",
+        "servicios",
+        "inversiones",
+        "otros_ingresos",
+        "n\u00f3mina",
+        "renta",
+        "servicios_profesionales",
+        "materiales",
+        "marketing",
+        "impuestos",
+        "seguros",
+        "mantenimiento",
+        "tecnolog\u00eda",
+        "transporte",
+        "otros_gastos"
+      ],
+      "description": "Transaction category"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "default": "MXN"
+    },
+    "description": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false
+    },
+    "supplier_id": {
+      "type": "string"
+    },
+    "document_id": {
+      "type": "string"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "efectivo",
+        "transferencia",
+        "tarjeta_credito",
+        "tarjeta_debito",
+        "cheque",
+        "otro"
+      ]
+    },
+    "reference": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "pending",
+        "cancelled"
+      ],
+      "default": "confirmed"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "type",
+    "amount",
+    "date"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

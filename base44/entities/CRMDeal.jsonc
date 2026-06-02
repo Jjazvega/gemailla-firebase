@@ -1,0 +1,111 @@
+{
+  "name": "CRMDeal",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "client_id": {
+      "type": "string"
+    },
+    "client_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "prospecto",
+        "contactado",
+        "propuesta",
+        "negociacion",
+        "cerrado_ganado",
+        "cerrado_perdido"
+      ],
+      "default": "prospecto"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "probability": {
+      "type": "number",
+      "default": 10
+    },
+    "expected_close": {
+      "type": "string",
+      "format": "date"
+    },
+    "assigned_to": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "lost_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "title",
+    "stage"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

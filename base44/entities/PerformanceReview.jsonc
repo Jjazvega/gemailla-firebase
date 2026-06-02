@@ -1,0 +1,148 @@
+{
+  "name": "PerformanceReview",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "employee_id": {
+      "type": "string"
+    },
+    "employee_name": {
+      "type": "string"
+    },
+    "reviewer": {
+      "type": "string"
+    },
+    "period": {
+      "type": "string",
+      "description": "Ej. Q1 2024, 2024-H1"
+    },
+    "review_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "score_productivity": {
+      "type": "number",
+      "description": "1-10"
+    },
+    "score_quality": {
+      "type": "number",
+      "description": "1-10"
+    },
+    "score_teamwork": {
+      "type": "number",
+      "description": "1-10"
+    },
+    "score_punctuality": {
+      "type": "number",
+      "description": "1-10"
+    },
+    "score_leadership": {
+      "type": "number",
+      "description": "1-10"
+    },
+    "strengths": {
+      "type": "string"
+    },
+    "areas_improvement": {
+      "type": "string"
+    },
+    "goals_next_period": {
+      "type": "string"
+    },
+    "overall_rating": {
+      "type": "string",
+      "enum": [
+        "excepcional",
+        "bueno",
+        "satisfactorio",
+        "necesita_mejora",
+        "insatisfactorio"
+      ],
+      "default": "satisfactorio"
+    },
+    "salary_adjustment": {
+      "type": "number",
+      "default": 0,
+      "description": "% de ajuste salarial propuesto"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "company_id",
+    "employee_id",
+    "period"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.company_id": {
+            "$in": {
+              "_collection": "CompanyMember",
+              "_query": {
+                "data.user_email": "{{user.email}}",
+                "data.role": "director",
+                "data.status": "active"
+              },
+              "_field": "data.company_id"
+            }
+          }
+        },
+        {
+          "data.employee_id": {
+            "$in": {
+              "_collection": "Employee",
+              "_query": {
+                "data.email": "{{user.email}}"
+              },
+              "_field": "id"
+            }
+          }
+        }
+      ]
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

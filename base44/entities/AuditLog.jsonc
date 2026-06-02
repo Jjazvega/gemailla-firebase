@@ -1,0 +1,87 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "user_name": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "login",
+        "document_upload",
+        "document_analyze",
+        "document_delete",
+        "transaction_create",
+        "transaction_update",
+        "transaction_delete",
+        "ai_query",
+        "company_create",
+        "company_update",
+        "member_add",
+        "member_remove",
+        "audit_run",
+        "export_data"
+      ],
+      "description": "Action type"
+    },
+    "entity_type": {
+      "type": "string"
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "action",
+    "user_email"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "name": "PredictionLog",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "user_id": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "fecha_generacion": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tipo_prediccion": {
+      "type": "string",
+      "enum": [
+        "demanda",
+        "anomalia",
+        "churn",
+        "what_if",
+        "nomina",
+        "general"
+      ],
+      "default": "general"
+    },
+    "resultado_ia": {
+      "type": "string",
+      "description": "Texto o valor predicho por IA"
+    },
+    "contexto": {
+      "type": "string",
+      "description": "Datos usados como contexto"
+    },
+    "plan_al_momento": {
+      "type": "string",
+      "description": "Plan activo cuando se gener\u00f3"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of the prediction scenario"
+    }
+  },
+  "required": [
+    "company_id",
+    "user_email",
+    "fecha_generacion"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}",
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}

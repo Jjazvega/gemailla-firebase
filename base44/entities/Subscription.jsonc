@@ -1,0 +1,71 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email del usuario suscrito"
+    },
+    "plan": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "pro",
+        "enterprise"
+      ],
+      "default": "basic",
+      "description": "Nivel de suscripci\u00f3n"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "cancelled",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Estado de la suscripci\u00f3n"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de inicio"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de vencimiento"
+    },
+    "billing_cycle": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "annual"
+      ],
+      "default": "monthly",
+      "description": "Ciclo de facturaci\u00f3n"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of the subscription details"
+    }
+  },
+  "required": [
+    "user_email",
+    "plan"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}"
+    },
+    "read": {
+      "data.user_email": "{{user.email}}"
+    },
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
+}

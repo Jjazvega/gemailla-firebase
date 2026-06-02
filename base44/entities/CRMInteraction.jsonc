@@ -1,0 +1,110 @@
+{
+  "name": "CRMInteraction",
+  "type": "object",
+  "properties": {
+    "company_id": {
+      "type": "string"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Reference to CRMClient"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "llamada",
+        "email",
+        "reunion",
+        "demo",
+        "propuesta",
+        "seguimiento",
+        "queja",
+        "pedido",
+        "otro"
+      ],
+      "default": "llamada"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Resumen de la interacci\u00f3n"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Resultado o siguiente paso"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Quien registr\u00f3 la interacci\u00f3n"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "company_id",
+    "client_id",
+    "type",
+    "date",
+    "summary"
+  ],
+  "rls": {
+    "create": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "read": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "update": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    },
+    "delete": {
+      "data.company_id": {
+        "$in": {
+          "_collection": "CompanyMember",
+          "_query": {
+            "data.user_email": "{{user.email}}",
+            "data.role": "director",
+            "data.status": "active"
+          },
+          "_field": "data.company_id"
+        }
+      }
+    }
+  }
+}
